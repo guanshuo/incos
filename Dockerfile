@@ -3,7 +3,8 @@ FROM ubuntu:xenial
 RUN apt-get update && apt-get install -y --force-yes rcs build-essential zlib1g-dev pkg-config \
     libssl-dev libzip-dev libexpat1-dev libgeoip-dev libbz2-dev libaio-dev libreadline-dev libncurses5-dev \
     libpcre3-dev libmcrypt-dev libcurl4-openssl-dev libxml2-dev libjpeg-dev libpng-dev libwebp-dev libfreetype6-dev \
-    cmake re2c autoconf bison curl wget unzip git memcached openssl openssh-server supervisor
+    cmake re2c autoconf bison curl wget unzip git memcached openssl openssh-server supervisor \
+    && apt-get clean
 # Install mariadb
 RUN git clone --recurse-submodules --depth=1 https://github.com/MariaDB/server.git 
 RUN cd server && cmake . \
@@ -17,7 +18,7 @@ RUN cd server && cmake . \
     -DWITHOUT_INNOBASE_STORAGE_ENGINE=1 \
     -DWITHOUT_ARCHIVE_STORAGE_ENGINE=1 \
     -DWITHOUT_BLACKHOLE_STORAGE_ENGINE=1 \
-&& make -j "$(nproc)" && make install && make clean && rm -rf /mariadb.tar.gz /mariadb
+&& make -j "$(nproc)" && make install && make clean && rm -rf /server.tar.gz /server
 # Install php
 ADD https://github.com/php/php-src/archive/master.tar.gz .
 RUN tar zxvf /master.tar.gz && cd php-src-master && ./buildconf && ./configure \
